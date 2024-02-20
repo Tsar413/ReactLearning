@@ -1,3 +1,7 @@
+# This Repository is used to record React Learning
+
+这个库被用来记录React学习。
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
