@@ -15,6 +15,38 @@ const list = [
 
 const isLogin = true;
 
+const flag = 3;
+
+// 定义函数，根据flag返回模板
+function getFlagTemplate(){
+  if(flag === 0){
+    return <div>flag = 0</div>;
+  } else if(flag === 1){
+    return <div>flag = 1</div>;
+  } else {
+    return <div>flag = 3</div>;
+  }
+}
+
+const clickButton = () => {
+  console.log("click");
+}
+
+// 事件参数
+const clickButton1 = (e) => {
+  console.log("click", e);
+}
+
+// 传递自定义参数
+const clickButton2 = (id) => {
+  console.log("click", id++);
+}
+
+// 传递事件参数和自定义参数
+const clickButton3 = (id, e) => {
+  console.log("click", ++id, e);
+}
+
 function App() {
   return (
     <div className="App">
@@ -47,6 +79,18 @@ function App() {
       {isLogin && <span>Please Login in</span>}
       {/* 三元运算符 */}
       {isLogin ? <span>Username</span> : <span>Please Login in</span>}
+      {/* Lesson Day1-07 */}
+      {/* 复杂情况渲染 */}
+      {getFlagTemplate()}
+      {/* Lesson Day1-08 */}
+      {/* 事件绑定 */}
+      <button onClick={clickButton}>Click</button>
+      {/* 获得对象参数 */}
+      <button onClick={clickButton1}>Click1</button>
+      {/* 传递自定义参数 */}
+      <button onClick={() => clickButton2(0)}>Click2</button>
+      {/* 传递事件参数和自定义参数 */}
+      <button onClick={(e) => clickButton3(0, e)}>Click3</button>
     </div>
   );
 }
