@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react'
 
 const count = 100;
 
@@ -47,7 +48,46 @@ const clickButton3 = (id, e) => {
   console.log("click", ++id, e);
 }
 
+function Button() {
+  return <button>Click Button1</button>
+}
+
+const Button2 = () => {
+  return <button>Click Button2</button>
+}
+
 function App() {
+  //useState实现一个计数器，点击自增
+  //1. 调用useState添加一个状态变量
+  //count1 就是状态变量
+  //setCount 就是修改状态变量的方法
+  const [count1, setCount] = useState(0);
+
+  //2. 点击事件回调
+  const handleClick = () => {
+    //作用： 1. 修改count1的值 2. 重新使用新的count1渲染UI
+    setCount(count1 + 1);
+  }
+
+  let [count2, setCount2] = useState(0);
+
+  const handleClick2 = () => {
+    //直接修改无法引发视图更新
+    // count2++;
+    // console.log(count2);
+    setCount2(count2++);
+  }
+
+  const [form, setForm] = useState({name : "1"})
+
+  const changeForm = () => {
+    setForm({
+      ...form,
+      name : "2"
+    })
+  }
+
+
   return (
     <div className="App">
       This is a react app.
@@ -91,6 +131,17 @@ function App() {
       <button onClick={() => clickButton2(0)}>Click2</button>
       {/* 传递事件参数和自定义参数 */}
       <button onClick={(e) => clickButton3(0, e)}>Click3</button>
+      {/* Lesson Day1-09 */}
+      {/* React组件 */}
+      <Button></Button>
+      <Button2></Button2>
+      {/* Lesson Day1-10 */}
+      {/* useState函数 */}
+      <button onClick={handleClick}>{count1}</button>
+      {/* Lesson Day1-11 */}
+      {/* useState修改状态规则 */}
+      <button onClick={handleClick2}>{count2}</button>
+      <button onClick={changeForm}>Change Form Name {form.name}</button>
     </div>
   );
 }
