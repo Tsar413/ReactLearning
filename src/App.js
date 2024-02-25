@@ -86,6 +86,15 @@ const App = () => {
     setCommentList(commentList.filter(item => item.rpid !== id));
   }
 
+  //tab切换功能
+  //1. 点击谁就把谁的type记录下来
+  //2. 通过记录的type和每一项遍历时的type做匹配 控制激活类名的显示
+  const [type, setType] = useState('hot');
+
+  const changeTabHandle = (type) => {
+    setType(type);
+  }
+
   return (
     <div className="app">
       {/* 导航 Tab */}
@@ -98,8 +107,7 @@ const App = () => {
           </li>
           <li className="nav-sort">
             {/* 高亮类名： active */}
-            <span className='nav-item'>最新</span>
-            <span className='nav-item'>最热</span>
+            {tabs.map(item => <span className={`nav-item ${type === item.type && 'active'}`} onClick={() => changeTabHandle(item.type)} key={item.type}>{item.text}</span>)}
           </li>
         </ul>
       </div>
@@ -154,7 +162,7 @@ const App = () => {
                   <span className="reply-time">{item.ctime}</span>
                   {/* 评论数量 */}
                   <span className="reply-time">点赞数:{item.like}</span>
-                  {/* 判断user.id === item.user.uid */}
+                  {/* 判断user.uid === item.user.uid */}
                   { user.uid === item.user.uid && 
                     <span className="delete-btn" onClick={() => deleteHandler(item.rpid)}>
                       删除
