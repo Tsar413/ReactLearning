@@ -1,5 +1,6 @@
 import './App.scss'
 import avatar from './images/bozai.png'
+import { useState } from 'react'
 
 /**
  * 评论列表的渲染和操作
@@ -73,7 +74,12 @@ const tabs = [
   { type: 'time', text: '最新' },
 ]
 
+//渲染评论列表
+//1. 使用useState维护defaultList
+
 const App = () => {
+  const [commentList, setCommentList] = useState(defaultList);
+
   return (
     <div className="app">
       {/* 导航 Tab */}
@@ -116,13 +122,15 @@ const App = () => {
         {/* 评论列表 */}
         <div className="reply-list">
           {/* 评论项 */}
-          <div className="reply-item">
+          {commentList.map(item => (
+          <div key={item.rpid} className="reply-item">
             {/* 头像 */}
             <div className="root-reply-avatar">
               <div className="bili-avatar">
                 <img
                   className="bili-avatar-img"
                   alt=""
+                  src={item.user.avatar}
                 />
               </div>
             </div>
@@ -130,16 +138,16 @@ const App = () => {
             <div className="content-wrap">
               {/* 用户名 */}
               <div className="user-info">
-                <div className="user-name">jack</div>
+                <div className="user-name">{item.user.uname}</div>
               </div>
               {/* 评论内容 */}
-              <div className="root-reply">
-                <span className="reply-content">这是一条评论回复</span>
+              <div key={item.rpid} className="root-reply">
+                <span className="reply-content">{item.content}</span>
                 <div className="reply-info">
                   {/* 评论时间 */}
-                  <span className="reply-time">{'2023-11-11'}</span>
+                  <span className="reply-time">{item.ctime}</span>
                   {/* 评论数量 */}
-                  <span className="reply-time">点赞数:{100}</span>
+                  <span className="reply-time">点赞数:{item.like}</span>
                   <span className="delete-btn">
                     删除
                   </span>
@@ -147,7 +155,7 @@ const App = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>))}
         </div>
       </div>
     </div>
