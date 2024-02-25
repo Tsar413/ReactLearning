@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react'
+import './index.css'
+import {useRef} from 'react'
 
 const count = 100;
 
@@ -87,6 +89,21 @@ function App() {
     })
   }
 
+  //受控表单绑定
+  //1. 声明一个react状态 - useState
+  //2. 核心绑定流程
+  //2.1 通过value属性绑定react状态
+  //2.2 绑定onChange事件 通过事件参数e拿到输入框最新的值 反向修改react状态
+  const [value, setValue] = useState('');
+
+  // React中获取DOM
+  // 1. 使用useRef创建ref对象，并于JSX绑定
+  // 2. 在DOM可用时，通过inputRef.current拿到DOM对象
+  // 渲染完毕之后dom生成之后可用
+  const inputRef = useRef(null);
+  const showDOM = () => {
+    console.log(inputRef.current.value);
+  }
 
   return (
     <div className="App">
@@ -142,6 +159,18 @@ function App() {
       {/* useState修改状态规则 */}
       <button onClick={handleClick2}>{count2}</button>
       <button onClick={changeForm}>Change Form Name {form.name}</button>
+      {/* Lesson Day1-12 */}
+      {/* React基础样式控制 */}
+      {/* 通过className控制 */}
+      <span className='foo'>This is className foo</span>
+      <br></br>
+      {/* Lesson Day2-01 */}
+      {/* 表单受控绑定 */}
+      <input value={value} type='text' onChange={(e) => setValue(e.target.value)}></input>
+      {/* Lesson Day2-02 */}
+      {/* React中获取DOM */}
+      <input type='text' ref={inputRef}></input>
+      <button onClick={showDOM}>Show DOM</button>
     </div>
   );
 }
