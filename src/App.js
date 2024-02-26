@@ -58,6 +58,28 @@ const Button2 = () => {
   return <button>Click Button2</button>
 }
 
+//父传子
+//1. 父组件传递数据 子组件身上绑定属性
+//2. 子组件接收数据 props参数接收
+function Son1(props) {
+  //props: 是一个对象，包含了父组件中传来的所有数据
+  return <div>{props.name}</div>;
+}
+
+function Son2(props) {
+  return <div>This is son2. {props.children}</div>;
+}
+
+function Son3({onGetSon3Msg}) {
+  const sonMsg = 'This is son3 message';
+  return (
+  <div>
+    this is son3
+    <button onClick={() => onGetSon3Msg(sonMsg)}>sendMsg</button>
+  </div>
+  )
+}
+
 function App() {
   //useState实现一个计数器，点击自增
   //1. 调用useState添加一个状态变量
@@ -103,6 +125,12 @@ function App() {
   const inputRef = useRef(null);
   const showDOM = () => {
     console.log(inputRef.current.value);
+  }
+
+  const name = "This is app name"
+
+  const getMeg = (msg) => {
+    console.log(msg);
   }
 
   return (
@@ -171,6 +199,21 @@ function App() {
       {/* React中获取DOM */}
       <input type='text' ref={inputRef}></input>
       <button onClick={showDOM}>Show DOM</button>
+      {/* Lesson Day2-06 */}
+      {/* Lesson Day2-07 */}
+      {/* Lesson Day2-08 */}
+      {/* 组件通信-父传子 */}
+      {/* name为属性名，可以自由定义 */}
+      <Son1 name={name}></Son1>
+      <Son2>
+        <span>this is span.</span>
+      </Son2>
+      {/* Lesson Day2-09 */}
+      {/* 子传父 */}
+      <div>
+        this is app
+        <Son3 onGetSon3Msg = {getMeg} />
+      </div>
     </div>
   );
 }
