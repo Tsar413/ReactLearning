@@ -1,8 +1,8 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import './index.css'
 import {useRef} from 'react'
+import { useEffect } from 'react'
 
 const count = 100;
 
@@ -80,6 +80,57 @@ function Son3({onGetSon3Msg}) {
   )
 }
 
+function Son4({sendMegToSon5}){
+  const msg = "This is son4 message";
+  return(
+    <button onClick={() => sendMegToSon5(msg)}>Click To Son5</button>
+  )
+}
+
+function Son5(props){
+  return(
+    <div>Son5 {props.msg}</div>
+  )
+}
+
+// APP -> A -> B
+
+const MsgContext = createContext();
+
+function A() {
+  return(
+    <div>
+      This is A component
+      <B />
+    </div>
+  )
+}
+
+function B() {
+  const msgB = useContext(MsgContext);
+  return(
+    <div>
+      This is B component {msgB}
+    </div>
+  )
+}
+
+const URL1 = 'http://geek.itheima.net/v1_0/channels';
+
+function Son6() {
+  //1. 渲染时开启一个定时器
+  useEffect(() => {
+    const timer = setInterval(() => {
+      console.log("clock execute");
+    }, 10000000000000)
+    return() => {
+      //清除副作用
+      clearInterval(timer);
+    }
+  }, [])
+  return <div>This is Son6</div>
+}
+
 function App() {
   //useState实现一个计数器，点击自增
   //1. 调用useState添加一个状态变量
@@ -132,6 +183,40 @@ function App() {
   const getMeg = (msg) => {
     console.log(msg);
   }
+
+  const [son4Msg, setSon4Msg] = useState('');
+  const sendMsgToSon5 = (msg) => {
+    setSon4Msg(msg);
+  }
+
+  const appMsg = 'This is app msg'
+
+  const [dataList, setDataList] = useState([])
+  useEffect(() => {
+    //额外的操作 获取频道列表
+    async function getList() {
+      const res = await fetch(URL1)
+      const list = await res.json()
+      setDataList(list.data.channels);
+    }
+    getList()
+  }, [])
+
+  // 1. 没有依赖项 初始渲染时执行+组件更新
+  const [count3, setCount3] = useState(0)
+  useEffect(() => {
+    console.log("副作用函数执行1");
+  }) //任何组件的变化都会重新刷新
+  // 2. 传入空依赖 初始渲染时执行
+  useEffect(() => {
+    console.log("副作用函数执行2");
+  }, [])
+  // 3. 传入特定的依赖项 初始渲染时执行+依赖项变化时执行
+  useEffect(() => {
+    console.log("副作用函数执行3");
+  }, [count3]) //只有count3发生了改变才会改变，高度绑定count3
+
+  const [show, setShow] = useState(true);
 
   return (
     <div className="App">
@@ -214,6 +299,44 @@ function App() {
         this is app
         <Son3 onGetSon3Msg = {getMeg} />
       </div>
+      <br></br>
+      {/* Lesson Day2-10 */}
+      {/* 使用状态提升完成兄弟间通信 */}
+      <div>
+        Son4
+        <Son4 sendMegToSon5 = {sendMsgToSon5}></Son4>
+      </div>
+      <div>
+        <Son5 msg = {son4Msg}></Son5>
+      </div>
+      <br></br>
+      {/* Lesson Day2-11 */}
+      {/* 使用content机制跨层级组件通信 */}
+      {/* 1. 使用createContext方法创建一个上下文对象Ctx
+          2. 在顶层组件（APP）中通过Ctx,Provider组件提供数据
+          3. 在底层组件（B）中通过useContext钩子函数获取消费数据 */}
+      <div>
+        <MsgContext.Provider value={appMsg}>
+          This is APP 
+          <A />
+        </MsgContext.Provider>
+      </div>
+      {/* Lesson Day2-12 */}
+      {/* useEffect的概念理解 */}
+          <div>
+            <ul>
+              {dataList.map(item => <li key={item.id}>{item.name}</li>)}
+            </ul>
+          </div>
+      {/* Lesson Day2-13 */}
+      {/* useEffect的不同依赖项 */}
+          <button onClick={() => setCount3(count3 + 1)}>+{count3}</button>
+      {/* Lesson Day2-14 */}
+      {/* useEffect清除副作用 */}
+          <div>
+            {show && <Son6 />}
+            <button onClick={() => setShow(false)}>Delete Son6</button>
+          </div>
     </div>
   );
 }
