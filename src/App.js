@@ -1,11 +1,12 @@
 import './App.scss'
 import avatar from './images/bozai.png'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import _ from 'lodash'
 import classNames from 'classnames'
 import { v4 as uuidV4 } from 'uuid'
 import dayjs from 'dayjs'
 import { useRef } from 'react'
+import axios from 'axios'
 
 /**
  * 评论列表的渲染和操作
@@ -15,45 +16,45 @@ import { useRef } from 'react'
  */
 
 // 评论列表数据
-const defaultList = [
-  {
-    // 评论id
-    rpid: 3,
-    // 用户信息
-    user: {
-      uid: '13258165',
-      avatar: '',
-      uname: '周杰伦',
-    },
-    // 评论内容
-    content: '哎哟，不错哦',
-    // 评论时间
-    ctime: '10-18 08:15',
-    like: 88,
-  },
-  {
-    rpid: 2,
-    user: {
-      uid: '36080105',
-      avatar: '',
-      uname: '许嵩',
-    },
-    content: '我寻你千百度 日出到迟暮',
-    ctime: '11-13 11:29',
-    like: 88,
-  },
-  {
-    rpid: 1,
-    user: {
-      uid: '30009257',
-      avatar,
-      uname: '黑马前端',
-    },
-    content: '学前端就来黑马',
-    ctime: '10-19 09:00',
-    like: 66,
-  },
-]
+// const defaultList = [
+//   {
+//     // 评论id
+//     rpid: 3,
+//     // 用户信息
+//     user: {
+//       uid: '13258165',
+//       avatar: '',
+//       uname: '周杰伦',
+//     },
+//     // 评论内容
+//     content: '哎哟，不错哦',
+//     // 评论时间
+//     ctime: '10-18 08:15',
+//     like: 88,
+//   },
+//   {
+//     rpid: 2,
+//     user: {
+//       uid: '36080105',
+//       avatar: '',
+//       uname: '许嵩',
+//     },
+//     content: '我寻你千百度 日出到迟暮',
+//     ctime: '11-13 11:29',
+//     like: 88,
+//   },
+//   {
+//     rpid: 1,
+//     user: {
+//       uid: '30009257',
+//       avatar,
+//       uname: '黑马前端',
+//     },
+//     content: '学前端就来黑马',
+//     ctime: '10-19 09:00',
+//     like: 66,
+//   },
+// ]
 // 当前登录用户信息
 const user = {
   // 用户id
@@ -79,11 +80,74 @@ const tabs = [
   { type: 'time', text: '最新' },
 ]
 
+//封装
+function useDataLoader() {
+    //获取接口数据渲染
+    const [commentList, setCommentList] = useState([])
+
+    useEffect(() => {
+      //请求数据
+      async function getData(){
+        //axios请求数据
+        const res = await axios.get('http://localhost:3004/list')
+        setCommentList(res.data)
+      }
+      getData()
+    }, [])
+
+    return {
+      commentList,
+      setCommentList
+    }
+}
+
+//封装Item组件
+function Item({item, onDel}) {
+  return (
+    <div className="reply-item">
+            {/* 头像 */}
+            <div className="root-reply-avatar">
+              <div className="bili-avatar">
+                <img
+                  className="bili-avatar-img"
+                  alt=""
+                  src={item.user.avatar}
+                />
+              </div>
+            </div>
+
+            <div className="content-wrap">
+              {/* 用户名 */}
+              <div className="user-info">
+                <div className="user-name">{item.user.uname}</div>
+              </div>
+              {/* 评论内容 */}
+              <div key={item.rpid} className="root-reply">
+                <span className="reply-content">{item.content}</span>
+                <div className="reply-info">
+                  {/* 评论时间 */}
+                  <span className="reply-time">{item.ctime}</span>
+                  {/* 评论数量 */}
+                  <span className="reply-time">点赞数:{item.like}</span>
+                  {/* 判断user.uid === item.user.uid */}
+                  { user.uid === item.user.uid && 
+                    <span className="delete-btn" onClick={() => onDel(item.rpid)}>
+                      删除
+                    </span>}
+                </div>
+              </div>
+            </div>
+          </div>
+  )
+}
+
 //渲染评论列表
 //1. 使用useState维护defaultList
 
 const App = () => {
-  const [commentList, setCommentList] = useState(_.orderBy(defaultList, 'like', 'desc'));
+  // const [commentList, setCommentList] = useState(_.orderBy(defaultList, 'like', 'desc'));
+
+  const {commentList, setCommentList} = useDataLoader()
 
   //删除评论
   const deleteHandler = (id) => {
@@ -177,41 +241,7 @@ const App = () => {
         {/* 评论列表 */}
         <div className="reply-list">
           {/* 评论项 */}
-          {commentList.map(item => (
-          <div key={item.rpid} className="reply-item">
-            {/* 头像 */}
-            <div className="root-reply-avatar">
-              <div className="bili-avatar">
-                <img
-                  className="bili-avatar-img"
-                  alt=""
-                  src={item.user.avatar}
-                />
-              </div>
-            </div>
-
-            <div className="content-wrap">
-              {/* 用户名 */}
-              <div className="user-info">
-                <div className="user-name">{item.user.uname}</div>
-              </div>
-              {/* 评论内容 */}
-              <div key={item.rpid} className="root-reply">
-                <span className="reply-content">{item.content}</span>
-                <div className="reply-info">
-                  {/* 评论时间 */}
-                  <span className="reply-time">{item.ctime}</span>
-                  {/* 评论数量 */}
-                  <span className="reply-time">点赞数:{item.like}</span>
-                  {/* 判断user.uid === item.user.uid */}
-                  { user.uid === item.user.uid && 
-                    <span className="delete-btn" onClick={() => deleteHandler(item.rpid)}>
-                      删除
-                    </span>}
-                </div>
-              </div>
-            </div>
-          </div>))}
+          {commentList.map(item => <Item key={item.id} item={item} onDel={deleteHandler}></Item>)}
         </div>
       </div>
     </div>
