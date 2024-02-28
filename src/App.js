@@ -120,16 +120,34 @@ const URL1 = 'http://geek.itheima.net/v1_0/channels';
 function Son6() {
   //1. 渲染时开启一个定时器
   useEffect(() => {
-    const timer = setInterval(() => {
-      console.log("clock execute");
-    }, 10000000000000)
-    return() => {
-      //清除副作用
-      clearInterval(timer);
-    }
+    // const timer = setInterval(() => {
+    //   console.log("clock execute");
+    // }, 10000000000000)
+    // return() => {
+    //   //清除副作用
+    //   clearInterval(timer);
+    // }
   }, [])
   return <div>This is Son6</div>
 }
+
+  //该布尔切换的逻辑 当前组件耦合在一起 不方便复用
+  //自定义Hook解决
+  function useToggle() {
+    //可复用的逻辑代码
+    const [divShow, setDivShow] = useState(true);
+    const changeDivStatus = () => setDivShow(!divShow)
+    //哪些状态和回调函数需要在其他组件中使用 return
+    return {
+      divShow,
+      changeDivStatus
+    }
+  }
+  // 封装自定义hook的通用思路
+  // 1. 声明一个以use打头的函数
+  // 2. 在函数体内封装可复用的逻辑（只要是可复用的逻辑）
+  // 3. 把组件用到的状态或者回调return出去（以对象或者数组）
+  // 4. 在哪个组件中要用到这个逻辑，就执行这个函数，解构出状态和回调
 
 function App() {
   //useState实现一个计数器，点击自增
@@ -217,6 +235,8 @@ function App() {
   }, [count3]) //只有count3发生了改变才会改变，高度绑定count3
 
   const [show, setShow] = useState(true);
+
+  const {divShow, changeDivStatus} = useToggle()
 
   return (
     <div className="App">
@@ -337,6 +357,12 @@ function App() {
             {show && <Son6 />}
             <button onClick={() => setShow(false)}>Delete Son6</button>
           </div>
+      {/* Lesson Day2-15 */}
+      {/* 自定义Hook函数 */}
+      <div>
+        {divShow && <div>This is div</div>}
+        <button onClick={changeDivStatus}>toggle</button>
+      </div>
     </div>
   );
 }
