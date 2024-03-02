@@ -7,16 +7,21 @@ const foodsStore = createSlice({
     name: 'foods',
     initialState: {
         //商品列表
-        foodsList: []
+        foodsList: [],
+        //菜单激活下标值
+        activeIndex: 0
     },
     reducers: {
         setFoodsList(state, action) {
             state.foodsList = action.payload
+        },
+        changeActiveIndex(state, action) {
+            state.activeIndex = action.payload
         }
     }
 })
 
-const {setFoodsList} = foodsStore.actions;
+const {setFoodsList, changeActiveIndex} = foodsStore.actions;
 const reducer = foodsStore.reducer;
 
 //异步获取
@@ -27,5 +32,5 @@ const fetchFoodsList = () => {
     }
 }
 
-export {fetchFoodsList}
+export {fetchFoodsList, changeActiveIndex}
 export default reducer
