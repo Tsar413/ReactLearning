@@ -30,11 +30,24 @@ const foodsStore = createSlice({
                 const item1 = state.cartList.find(item => item.id === action.payload.id)
                 item1.count = 1
             }
+        },
+        increaseCount(state, action) {
+            const item = state.cartList.find(item => item.id === action.payload.id)
+            item.count++
+        },
+        decreaseCount(state, action) {
+            const item = state.cartList.find(item => item.id === action.payload.id)
+            if(item.count > 0){
+                item.count--
+            }
+        },
+        clearCart(state) {
+            state.cartList = []
         }
     }
 })
 
-const {setFoodsList, changeActiveIndex, addCartList} = foodsStore.actions;
+const {setFoodsList, changeActiveIndex, addCartList, increaseCount, decreaseCount, clearCart} = foodsStore.actions;
 const reducer = foodsStore.reducer;
 
 //异步获取
@@ -45,5 +58,5 @@ const fetchFoodsList = () => {
     }
 }
 
-export {fetchFoodsList, changeActiveIndex, addCartList}
+export {fetchFoodsList, changeActiveIndex, addCartList, increaseCount, decreaseCount, clearCart}
 export default reducer
