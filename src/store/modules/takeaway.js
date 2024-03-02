@@ -9,7 +9,9 @@ const foodsStore = createSlice({
         //商品列表
         foodsList: [],
         //菜单激活下标值
-        activeIndex: 0
+        activeIndex: 0,
+        //购物车列表
+        cartList: []
     },
     reducers: {
         setFoodsList(state, action) {
@@ -17,11 +19,22 @@ const foodsStore = createSlice({
         },
         changeActiveIndex(state, action) {
             state.activeIndex = action.payload
+        },
+        addCartList(state, action) {
+            //从action.payload.id匹配cardList 匹配到了 添加过
+            const item = state.cartList.find(item => item.id === action.payload.id)
+            if(item){
+                item.count++;
+            } else {
+                state.cartList.push(action.payload);
+                const item1 = state.cartList.find(item => item.id === action.payload.id)
+                item1.count = 1
+            }
         }
     }
 })
 
-const {setFoodsList, changeActiveIndex} = foodsStore.actions;
+const {setFoodsList, changeActiveIndex, addCartList} = foodsStore.actions;
 const reducer = foodsStore.reducer;
 
 //异步获取
@@ -32,5 +45,5 @@ const fetchFoodsList = () => {
     }
 }
 
-export {fetchFoodsList, changeActiveIndex}
+export {fetchFoodsList, changeActiveIndex, addCartList}
 export default reducer
