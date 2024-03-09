@@ -1,9 +1,9 @@
-import foodsReducer from './modules/takeaway'
 import { configureStore } from '@reduxjs/toolkit'
+import billReducer from './modules/billStore'
 
 const store = configureStore({
     reducer: {
-        foods: foodsReducer
+        bill: billReducer
     }
 })
 
