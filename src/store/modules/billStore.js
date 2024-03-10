@@ -1,4 +1,4 @@
-import createSlice from "@reduxjs/toolkit"
+import {createSlice} from "@reduxjs/toolkit"
 import axios from "axios"
 
 
@@ -14,7 +14,7 @@ const billStore = createSlice({
     }
 })
 
-const { setBillList } = billStore.action
+const { setBillList } = billStore.actions
 
 function getBillList() {
     return async (dispacth) => {
