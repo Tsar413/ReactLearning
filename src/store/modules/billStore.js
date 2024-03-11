@@ -8,15 +8,15 @@ const billStore = createSlice({
         billList: []
     },
     reducers: {
-        setBillList(action, payload){
-            action.billList = payload.action
+        setBillList(state, action){
+            state.billList = action.payload
         }
     }
 })
 
 const { setBillList } = billStore.actions
 
-function getBillList() {
+const getBillList = () => {
     return async (dispacth) => {
         const res = await axios.get("http://localhost:3004/ka");
         dispacth(setBillList(res.data));

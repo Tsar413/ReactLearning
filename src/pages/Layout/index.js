@@ -30,10 +30,10 @@ const tabs = [
 
 
 const Layout = () => {
-    const dispacth = useDispatch()
+    const dispatch = useDispatch()
     useEffect(() => {
-        dispacth(getBillList())
-    }, [dispacth])
+        dispatch(getBillList())
+    }, [dispatch])
 
     const navigate = useNavigate();
 
