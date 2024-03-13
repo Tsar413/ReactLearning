@@ -1,14 +1,25 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import { RouterProvider } from 'react-router-dom';
+import router from './router';
 import { Provider } from 'react-redux'
-import store from './store'
 
-import App from './App'
+//导入定制主题文件
+import './theme.css'
+import store from './store';
+// import sum from '@/test'
 
+// const total = sum(1, 2)
+// console.log(total)
 
-const root = createRoot(document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
-    <App />
+    <RouterProvider router={router}>
+
+  </RouterProvider>
   </Provider>
-)
+);
+
+
