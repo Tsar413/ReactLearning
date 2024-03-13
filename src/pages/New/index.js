@@ -12,7 +12,7 @@ import dayjs from 'dayjs'
 const New = () => {
   const navigate = useNavigate()
   // 1. 准备一个控制收入支出的状态
-   // pay-支出 income-收入
+  const [billType, setBillType] = useState('pay') // pay-支出 income-收入
 
   // 收集金额
 
@@ -35,13 +35,15 @@ const New = () => {
         <div className="kaType">
           <Button
             shape="rounded"
-            className={classNames('selected')}
+            className={classNames(billType === 'pay' ? 'selected' : '')}
+            onClick={() => setBillType('pay')}
           >
             支出
           </Button>
           <Button
-            className={classNames()}
+            className={classNames(billType === 'income' ? 'selected' : '')}
             shape="rounded"
+            onClick={() => setBillType('income')}
           >
             收入
           </Button>
@@ -73,7 +75,7 @@ const New = () => {
 
       <div className="kaTypeList">
         {/* 数据区域 */}
-        {billListData['pay'].map(item => {
+        {billListData[billType].map(item => {
           return (
             <div className="kaType" key={item.type}>
               <div className="title">{item.name}</div>
